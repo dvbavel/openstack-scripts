@@ -34,8 +34,7 @@ openstack role add --project $newprojectid --user $adminuser Member
 
 #Adjust default security rules for new project
 echo Setting correct security group rules
-openstack --os-project-name "$newprojectname" security group rule create --proto tcp --src-ip 0.0.0.0/0 --dst-port 1:65535 default # to allow all TCP
-openstack --os-project-name "$newprojectname" security group rule create --proto udp --src-ip 0.0.0.0/0 --dst-port 1:65535 default # to allow all UDP
+openstack --os-project-name "$newprojectname" security group rule create --proto -1 --src-ip 0.0.0.0/0 --dst-port 1:65535 default # to allow all
 
 #Remove admin from newly created project
 echo Removing "$adminuser" from "$newprojectname".
