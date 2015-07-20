@@ -25,14 +25,20 @@ else
 fi
 
 #Create new project
+echo Creating project "$newprojectname" with description "$newprojectdesc"
 newprojectid=$(get_id openstack project create --description "$newprojectdesc" "$newprojectname")
 
 #Add admin to newly created project to adjust security rules
+echo Adding "$adminuser" to "$newprojectname" to set security group values
 openstack role add --project $newprojectid --user $adminuser Member
 
 #Adjust default security rules for new project
+echo Setting correct security group rules
 openstack --os-project-name "$newprojectname" security group rule create --proto tcp --src-ip 0.0.0.0/0 --dst-port 1:65535 default # to allow all TCP
 openstack --os-project-name "$newprojectname" security group rule create --proto udp --src-ip 0.0.0.0/0 --dst-port 1:65535 default # to allow all UDP
 
-#Remove admin from newly created projec
+#Remove admin from newly created project
+echo Removing "$adminuser" from "$newprojectname".
 openstack role remove --project $newprojectid --user $adminuser Member
+
+echo New project has been created (hopefully), please check above output for any errors
