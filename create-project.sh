@@ -34,10 +34,17 @@ openstack role add --project $newprojectid --user $adminuser Member
 
 #Adjust default security rules for new project
 echo Setting correct security group rules
-openstack --os-project-name "$newprojectname" security group rule create --proto -1 --src-ip 0.0.0.0/0 --dst-port 1:65535 default # to allow all
+#openstack --os-project-name "$newprojectname" security group rule create --proto tcp --src-ip 0.0.0.0/0 --dst-port 1:65535 default # to allow all
+#openstack --os-project-name "$newprojectname" security group rule create --proto tcp --src-ip ::/0 --dst-port 1:65535 default # to allow all
+#openstack --os-project-name "$newprojectname" security group rule create --proto udp --src-ip 0.0.0.0/0 --dst-port 1:65535 default # to allow all
+#openstack --os-project-name "$newprojectname" security group rule create --proto udp --src-ip ::/0 --dst-port 1:65535 default # to allow all
+#openstack --os-project-name "$newprojectname" security group rule create --proto icmp --src-ip 0.0.0.0/0 --dst-port -1:-1 default # to allow all
+#openstack --os-project-name "$newprojectname" security group rule create --proto icmp --src-ip ::/0 --dst-port -1:-1 default # to allow all
+neutron --os-tenant-name "$newprojectname" security-group-rule-create --ethertype ipv4  --direction ingress default
+neutron --os-tenant-name "$newprojectname" security-group-rule-create --ethertype ipv6  --direction ingress default
 
 #Remove admin from newly created project
 echo Removing "$adminuser" from "$newprojectname".
 openstack role remove --project $newprojectid --user $adminuser Member
 
-echo New project has been created (hopefully), please check above output for any errors
+echo "New project has been created (hopefully), please check above output for any errors"
