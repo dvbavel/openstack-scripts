@@ -17,6 +17,16 @@ function get_id () {
     echo `"$@" | awk '/ id / { print $4 }'`
 }
 
+#Check for script requirements
+for osvar in OS_AUTH_URL OS_USERNAME OS_PASSWORD ; do
+    if [ -n "${!osvar:-}" ] ; then
+        echo "$osvar is set"
+    else
+        echo "$osvar is not set, please source your openrc file"
+	exit 1
+    fi
+done
+
 if [ $(rpm -qa|grep -c python-openstackclient) -gt 0 ]; then
     echo python-openstackclient present
 else
