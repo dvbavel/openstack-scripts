@@ -24,6 +24,13 @@ else
     exit 1
 fi
 
+if [ $(rpm -qa|grep -c python-neutronclient) -gt 0 ]; then
+    echo python-neutronclient present
+else
+    echo Please install python-neutronclient
+    exit 1
+fi
+
 #Create new project
 echo Creating project "$newprojectname" with description "$newprojectdesc"
 newprojectid=$(get_id openstack project create --description "$newprojectdesc" "$newprojectname")
