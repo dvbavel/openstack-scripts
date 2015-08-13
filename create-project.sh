@@ -1,15 +1,17 @@
 #!/bin/bash
 newprojectname="$1"
 newprojectdesc="$2"
+floatingipquota="$3"
 adminuser=admin
 
 if [[ $# -eq 0 ]] ; then
-    echo '================================================================================='
-    echo 'Script usage: ./create-project.sh "Project Name" "Project Description"'
-    echo '---------------------------------------------------------------------------------'
-    echo 'Project Description  : Understable Description of the project'
+    echo '=========================================================================================='
+    echo 'Script usage: ./create-project.sh "Project Name" "Project Description" "Floating IP quota'
+    echo '------------------------------------------------------------------------------------------'
     echo 'Project Name         : The name of the project as it will appear in OpenStack'
-    echo '================================================================================='
+    echo 'Project Description  : Understandable Description of the project'
+    echo 'Floating ip quota    : Quota for floating ip (not required)'
+    echo '=========================================================================================='
     exit 1
 fi
 
@@ -63,5 +65,13 @@ neutron --os-tenant-name "$newprojectname" security-group-rule-create --ethertyp
 #Remove admin from newly created project
 echo Removing "$adminuser" from "$newprojectname".
 openstack role remove --project $newprojectid --user $adminuser Member
+
+if [[ $3 -ne 0 ]] ; then
+    echo setting Floating ip quota to "$floatingipquota"
+    neutron --os-tenant-name "$newprojectname" quota-update --floatingip "$floatingipquota"
+else
+    echo Setting floating ip quota to 0
+    neutron --os-tenant-name "$newprojectname" quota-update --floatingip 0
+fi
 
 echo "New project has been created (hopefully), please check above output for any errors"
