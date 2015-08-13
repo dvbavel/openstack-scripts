@@ -4,7 +4,7 @@ newprojectdesc="$2"
 floatingipquota="$3"
 adminuser=admin
 
-if [[ $# -eq 0 ]] ; then
+if [[ $# -ne 2 ]] ; then
     echo '=========================================================================================='
     echo 'Script usage: ./create-project.sh "Project Name" "Project Description" "Floating IP quota'
     echo '------------------------------------------------------------------------------------------'
@@ -33,14 +33,14 @@ if [ $(rpm -qa|grep -c python-openstackclient) -gt 0 ]; then
     echo python-openstackclient present
 else
     echo [ERROR] Please install python-openstackclient
-    exit 1
+    exit 0
 fi
 
 if [ $(rpm -qa|grep -c python-neutronclient) -gt 0 ]; then
     echo python-neutronclient present
 else
     echo [ERROR] Please install python-neutronclient
-    exit 1
+    exit 0
 fi
 
 #Create new project
