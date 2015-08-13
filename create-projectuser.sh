@@ -6,7 +6,7 @@ echo $userarray
 projectname="${@: -1}"
 echo $projectname
 
-if [[ $# -eq 0 ]] ; then
+if [[ $# -ne 2 ]] ; then
     echo '================================================================================='
     echo 'Script usage: ./create-projectuser.sh "Users" "Project name"'
     echo '---------------------------------------------------------------------------------'
@@ -29,8 +29,8 @@ done
 if [ $(rpm -qa|grep -c python-openstackclient) -gt 0 ]; then
     echo python-openstackclient present
 else
-    echo Please install python-openstackclient
-    exit 1
+    echo -e "\e[1;31m[ERROR]\e[0m Please install python-openstackclient"
+    exit 0
 fi
 
 #Create new project
