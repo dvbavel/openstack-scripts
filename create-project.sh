@@ -62,10 +62,6 @@ echo Setting correct security group rules
 neutron --os-tenant-name "$newprojectname" security-group-rule-create --ethertype ipv4  --direction ingress default
 neutron --os-tenant-name "$newprojectname" security-group-rule-create --ethertype ipv6  --direction ingress default
 
-#Remove admin from newly created project
-echo Removing "$adminuser" from "$newprojectname".
-openstack role remove --project $newprojectid --user $adminuser Member
-
 if [[ $3 -ne 0 ]] ; then
     echo setting Floating ip quota to "$floatingipquota"
     neutron --os-tenant-name "$newprojectname" quota-update --floatingip "$floatingipquota"
@@ -73,5 +69,9 @@ else
     echo Setting floating ip quota to 0
     neutron --os-tenant-name "$newprojectname" quota-update --floatingip 0
 fi
+
+#Remove admin from newly created project
+echo Removing "$adminuser" from "$newprojectname".
+openstack role remove --project $newprojectid --user $adminuser Member
 
 echo "New project has been created (hopefully), please check above output for any errors"
