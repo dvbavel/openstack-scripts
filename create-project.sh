@@ -32,14 +32,14 @@ done
 if [ $(rpm -qa|grep -c python-openstackclient) -gt 0 ]; then
     echo python-openstackclient present
 else
-    echo Please install python-openstackclient
+    echo [ERROR] Please install python-openstackclient
     exit 1
 fi
 
 if [ $(rpm -qa|grep -c python-neutronclient) -gt 0 ]; then
     echo python-neutronclient present
 else
-    echo Please install python-neutronclient
+    echo [ERROR] Please install python-neutronclient
     exit 1
 fi
 
