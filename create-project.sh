@@ -67,6 +67,10 @@ neutron --os-tenant-name "$newprojectname" security-group-rule-create --ethertyp
 if [[ $3 -ne 0 ]] ; then
     echo setting Floating ip quota to "$floatingipquota"
     neutron quota-update --tenant_id "$newprojectid" --floatingip "$floatingipquota"
+    echo "creating Floating IPs for new project"
+    for n in $(seq $floatingipquota); do
+        openstack --os-project-name "$newprojectname" floating ip create
+    done
 else
     echo Setting floating ip quota to 0
     neutron quota-update --tenant_id "$newprojectid" --floatingip 0
