@@ -19,6 +19,10 @@ function get_id () {
     echo `"$@" | awk '/ id / { print $4 }'`
 }
 
+function get_floatingip () {
+    echo `"$@" | awk '/ ip / { print $4 }'`
+}
+
 #Check for script requirements
 for osvar in OS_AUTH_URL OS_USERNAME OS_PASSWORD ; do
     if [ -n "${!osvar:-}" ] ; then
@@ -69,7 +73,8 @@ if [[ $3 -ne 0 ]] ; then
     neutron quota-update --tenant_id "$newprojectid" --floatingip "$floatingipquota"
     echo "creating Floating IPs for new project"
     for n in $(seq $floatingipquota); do
-        openstack --os-project-name "$newprojectname" floating ip create
+        newfloatingip=$(get_floatingip openstack --os-project-name "$newprojectname" floating ip create)
+        echo $newfloatingip
     done
 else
     echo Setting floating ip quota to 0
