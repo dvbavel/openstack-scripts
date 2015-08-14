@@ -4,7 +4,7 @@ newprojectdesc="$2"
 floatingipquota="$3"
 adminuser=admin
 
-if [[ $# -ne 2 ]] ; then
+if [[ $# -lt 2 ]] ; then
     echo '=========================================================================================='
     echo 'Script usage: ./create-project.sh "Project Name" "Project Description" "Floating IP quota'
     echo '------------------------------------------------------------------------------------------'
@@ -66,10 +66,10 @@ neutron --os-tenant-name "$newprojectname" security-group-rule-create --ethertyp
 
 if [[ $3 -ne 0 ]] ; then
     echo setting Floating ip quota to "$floatingipquota"
-    neutron --os-tenant-name "$newprojectname" quota-update --floatingip "$floatingipquota"
+    neutron quota-update --tenant_id "$newprojectid" --floatingip "$floatingipquota"
 else
     echo Setting floating ip quota to 0
-    neutron --os-tenant-name "$newprojectname" quota-update --floatingip 0
+    neutron quota-update --tenant_id "$newprojectid" --floatingip 0
 fi
 
 #Remove admin from newly created project
