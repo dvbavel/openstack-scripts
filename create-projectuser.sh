@@ -29,7 +29,8 @@ done
 if [ $(rpm -qa|grep -c python-openstackclient) -gt 0 ]; then
     echo python-openstackclient present
 else
-    echo -e "\e[1;31m[ERROR]\e[0m Please install python-openstackclient"
+    echo -e "[\e[1;31mERROR\e[0m] Please install python-openstackclient"
+    echo "An error did occur during adding the project, script halted"
     exit 0
 fi
 
