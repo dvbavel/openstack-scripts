@@ -2,15 +2,13 @@
 
 length=$(($#-1))
 userarray=${@:1:$length}
-echo $userarray
 projectname="${@: -1}"
-echo $projectname
 
 if [[ $# -ne 2 ]] ; then
     echo '================================================================================='
     echo 'Script usage: ./create-projectuser.sh "Users" "Project name"'
     echo '---------------------------------------------------------------------------------'
-    echo 'Project Users		: The usernames that should be added to the project'
+    echo 'Project Users         : The usernames that should be added to the project'
     echo 'Project Name          : The name of the project as it will appear in OpenStack'
     echo '================================================================================='
     exit 1
