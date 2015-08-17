@@ -3,15 +3,16 @@ newprojectname="$1"
 newprojectdesc="$2"
 floatingipquota="$3"
 adminuser=admin
+floatingiprange=floating
 
 if [[ $# -lt 2 ]] ; then
-    echo '=========================================================================================='
-    echo 'Script usage: ./create-project.sh "Project Name" "Project Description" "Floating IP quota'
-    echo '------------------------------------------------------------------------------------------'
+    echo '==========================================================================================='
+    echo 'Script usage: ./create-project.sh "Project Name" "Project Description" "Floating IP quota"'
+    echo '-------------------------------------------------------------------------------------------'
     echo 'Project Name         : The name of the project as it will appear in OpenStack'
     echo 'Project Description  : Understandable Description of the project'
     echo 'Floating ip quota    : Quota for floating ip (not required)'
-    echo '=========================================================================================='
+    echo '==========================================================================================='
     exit 1
 fi
 
@@ -26,10 +27,11 @@ function get_floatingip () {
 #Check for script requirements
 for osvar in OS_AUTH_URL OS_USERNAME OS_PASSWORD ; do
     if [ -n "${!osvar:-}" ] ; then
-        echo "$osvar is set"
+        echo "[\e[1;32mOK\e[0m] $osvar is set"
     else
-        echo "$osvar is not set, please source your openrc file"
-	exit 1
+        echo -e "[\e[1;31mERROR\e[0m] $osvar is not set, please source your openrc file"
+        echo "An error did occur during adding the project, script halted"
+	exit 0
     fi
 done
 
@@ -73,8 +75,8 @@ if [[ $3 -ne 0 ]] ; then
     neutron quota-update --tenant_id "$newprojectid" --floatingip "$floatingipquota"
     echo "creating Floating IPs for new project"
     for n in $(seq $floatingipquota); do
-        newfloatingip=$(get_floatingip openstack --os-project-name "$newprojectname" floating ip create)
-        echo $newfloatingip
+        newfloatingip=$(get_floatingip openstack --os-project-name "$newprojectname" ip floating create "$floatingiprange")
+        echo ""$newfloatingip" Has been created for the new project, please register this in CMDB"
     done
 else
     echo Setting floating ip quota to 0
@@ -83,6 +85,6 @@ fi
 
 #Remove admin from newly created project
 echo Removing "$adminuser" from "$newprojectname".
-openstack role remove --project $newprojectid --user $adminuser Member
+openstack role remove --project "$newprojectid" --user "$adminuser" Member
 
 echo "New project has been created (hopefully), please check above output for any errors"
